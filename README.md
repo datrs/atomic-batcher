@@ -77,7 +77,7 @@ Licensed under the AGPL-3.0+. See [LICENSE](./LICENSE).
 
 [1]: https://img.shields.io/crates/v/atomic-batcher.svg?style=flat-square
 [2]: https://crates.io/crates/atomic-batcher
-[3]: https://img.shields.io/travis/Zhouhansen/atomic-batcher.svg?style=flat-square
+[3]: https://api.travis-ci.org/ZhouHansen/atomic-batcher.svg?branch=master
 [4]: https://travis-ci.org/Zhouhansen/atomic-batcher
 [5]: https://img.shields.io/crates/d/atomic-batcher.svg?style=flat-square
 [6]: https://crates.io/crate/atomic-batcher
