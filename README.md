@@ -1,7 +1,6 @@
 # atomic-batcher 
 
 [![crates.io version][1]][2] [![build status][3]][4] [![downloads][5]][6]
-[![Build Status](https://travis-ci.org/Zhouhansen/atomic-batcher.svg?branch=master)](https://travis-ci.org/Zhouhansen/atomic-batcher)
 
 `atomic-batcher` is a simple batching function that allows you to atomically batch a series of operations. Adapted from [mafintosh/atomic-batcher](https://github.com/mafintosh/atomic-batcher)
 
