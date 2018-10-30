@@ -67,6 +67,5 @@ fn run_async() {
       batcher.done(Ok(()));
       Ok(())
     })
-    .map_err(|e| panic!("delay errored; err={:?}", e));
   tokio::run(task);
 }
