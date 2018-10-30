@@ -1,0 +1,12 @@
+[package]
+name = "atomic-batcher"
+description = "A simple batching function that allows you to atomically batch a series of operations."
+version = "0.8.0"
+repository = "https://github.com/ZhouHansen/atomic-batcher"
+documentation = "https://docs.rs/atomic-batcher"
+authors = ["ZhouHansen <z308114274@gmail.com>"]
+license = "MIT OR Apache-2.0"
+readme = "README.md"
+
+[dependencies]
+tokio = "0.1.11"
