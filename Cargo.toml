@@ -1,7 +1,7 @@
 [package]
 name = "atomic-batcher"
 description = "A simple batching function that allows you to atomically batch a series of operations."
-version = "0.8.1"
+version = "0.8.2"
 repository = "https://github.com/ZhouHansen/atomic-batcher"
 documentation = "https://docs.rs/atomic-batcher"
 authors = ["ZhouHansen <z308114274@gmail.com>"]
