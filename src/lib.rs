@@ -1,4 +1,3 @@
-// #![forbid(missing_docs)]
 #![cfg_attr(test, deny(warnings))]
 
 //! ## Example

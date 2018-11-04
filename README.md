@@ -1,11 +1,11 @@
-# atomic-batcher 
+# atomic-batcher
 
 [![crates.io version][1]][2] [![build status][3]][4] [![downloads][5]][6]
 
 `atomic-batcher` is a simple batching function that allows you to atomically batch a series of operations. Adapted from [mafintosh/atomic-batcher](https://github.com/mafintosh/atomic-batcher)
 
-- Documetaion
-- Crates.io
+- [Documetaion](https://docs.rs/atomic-batcher)
+- [Crates.io](https://crates.io/crate/atomic-batcher)
 
 ## Installation
 
@@ -73,11 +73,11 @@ Running the above example will print
 ```
 
 ## License
-Licensed under the AGPL-3.0+. See [LICENSE](./LICENSE).
+[MIT](./LICENSE-MIT) OR [APACHE](./LICENSE-APACHE)
 
 [1]: https://img.shields.io/crates/v/atomic-batcher.svg?style=flat-square
 [2]: https://crates.io/crates/atomic-batcher
-[3]: https://api.travis-ci.org/ZhouHansen/atomic-batcher.svg?branch=master
-[4]: https://travis-ci.org/Zhouhansen/atomic-batcher
+[3]: https://api.travis-ci.org/datrs/atomic-batcher.svg?branch=master
+[4]: https://travis-ci.org/datrs/atomic-batcher
 [5]: https://img.shields.io/crates/d/atomic-batcher.svg?style=flat-square
 [6]: https://crates.io/crate/atomic-batcher
