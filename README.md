@@ -22,21 +22,20 @@ extern crate atomic_batcher;
 extern crate tokio;
 
 use atomic_batcher::*;
-use std::sync::Arc;
 use std::time::{Duration, Instant};
 use tokio::prelude::*;
 use tokio::timer::Delay;
 
 fn main() {
   let when = Instant::now() + Duration::from_millis(2000);
-  let run = move |val: Vec<u64>, _batcher: Batcher<u64>| -> () {
+  let run = move |val: Vec<u64>, _batcher: &Batcher<u64>| -> () {
     println!("{:?}", val);  
   };
   
   // Create a batcher with a run function which will be called  
   // when batcher's inner state `running` is OFF and inner state `pending_batch`
   // is not empty.
-  let batcher = Batcher::new(Arc::new(run));
+  let batcher = Batcher::new(Box::new(run));
 
   // Before this first append, batcher's inner state `running` is initial OFF, 
   // so batcher will call the run function with the append value directly,
