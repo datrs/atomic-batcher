@@ -13,14 +13,14 @@
 
 //! fn main() {
 //!   let when = Instant::now() + Duration::from_millis(2000);
-//!   let run = move |val: Vec<u64>, _batcher: Batcher<u64>| -> () {
+//!   let run = move |val: Vec<u64>, _batcher: &Batcher<u64>| -> () {
 //!     println!("{:?}", val);  
 //!   };
 //!
 //!   // Create a batcher with a run function which will be called  
 //!   // when batcher's inner state `running` is OFF and inner state `pending_batch`
 //!   // is not empty.
-//!   let batcher = Batcher::new(Arc::new(run));
+//!   let batcher = Batcher::new(Box::new(run));
 //!
 //!   // Before this first append, batcher's inner state `running` is initial OFF,
 //!   // so batcher will call the run function with the append value directly,
@@ -38,7 +38,7 @@
 //!   // then call run function with `pending_batch`.
 //!   // Finally turn `running` to ON again.
 //!   let task = Delay::new(when)
-//!   .and_then(|_| {
+//!   .and_then(move |_| {
 //!     batcher.done(Ok(()));
 //!     Ok(())
 //!   })
@@ -53,34 +53,32 @@
 //! // two seconds later
 //! [4, 5, 6, 7, 8, 9]
 //! ```
-
 use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::{Arc, Mutex};
 
-type Cb = Arc<Fn(Result<(), &'static str>) -> () + Send + Sync>;
+type Cb = Box<Fn(Result<(), &str>) -> () + Send + Sync>;
 /// Describing optional batched callback function
 pub type CbOption = Option<Cb>;
 
 /// Batching representation.
-#[derive(Clone)]
-pub struct Batcher<T: Clone> {
-  running: Arc<AtomicBool>,
-  pending_batch: Arc<Mutex<Vec<T>>>,
-  pending_callbacks: Arc<Mutex<Vec<Cb>>>,
-  callbacks: Arc<Mutex<Vec<Cb>>>,
-  run: Arc<Fn(Vec<T>, Batcher<T>) -> () + Send + Sync>,
+pub struct Batcher<T> {
+  running: AtomicBool,
+  pending_batch: Mutex<Vec<T>>,
+  pending_callbacks: Mutex<Vec<Cb>>,
+  callbacks: Mutex<Vec<Cb>>,
+  run: Box<Fn(Vec<T>, &Batcher<T>) -> () + Send + Sync>,
 }
 
-impl<T: Clone> Batcher<T> {
+impl<T> Batcher<T> {
   /// Create a new batcher with a run function.
-  pub fn new(run: Arc<Fn(Vec<T>, Batcher<T>) -> () + Send + Sync>) -> Self {
-    Batcher {
-      running: Arc::new(AtomicBool::new(false)),
-      pending_batch: Arc::new(Mutex::new(Vec::new())),
-      pending_callbacks: Arc::new(Mutex::new(Vec::new())),
-      callbacks: Arc::new(Mutex::new(Vec::new())),
+  pub fn new(run: Box<Fn(Vec<T>, &Batcher<T>) -> () + Send + Sync>) -> Arc<Self> {
+    Arc::new(Batcher {
+      running: AtomicBool::new(false),
+      pending_batch: Mutex::new(Vec::new()),
+      pending_callbacks: Mutex::new(Vec::new()),
+      callbacks: Mutex::new(Vec::new()),
       run,
-    }
+    })
   }
   /// Accept an array of values and a callback.
   /// The accepted callback is called when the batch containing the values have been run.
@@ -98,11 +96,11 @@ impl<T: Clone> Batcher<T> {
         *self.callbacks.lock().unwrap() = vec![cb];
       }
       self.running.store(true, Ordering::Relaxed);
-      (self.run)(val, self.clone());
+      (self.run)(val, self);
     }
   }
   /// Turn batcher's running state to off. then call the run function.
-  pub fn done(self, err: Result<(), &'static str>) -> () {
+  pub fn done(&self, err: Result<(), &str>) -> () {
     for cb in self.callbacks.lock().unwrap().iter() {
       cb(err)
     }
@@ -115,6 +113,6 @@ impl<T: Clone> Batcher<T> {
       return;
     }
     self.running.store(true, Ordering::Relaxed);
-    (self.run)(nextbatch, self.clone());
+    (self.run)(nextbatch, self);
   }
 }
