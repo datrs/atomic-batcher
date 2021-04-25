@@ -1,12 +1,20 @@
 [package]
 name = "atomic-batcher"
 description = "A simple batching function that allows you to atomically batch a series of operations."
-version = "0.8.2"
-repository = "https://github.com/ZhouHansen/atomic-batcher"
+version = "0.9.0"
+repository = "https://github.com/datrs/atomic-batcher"
 documentation = "https://docs.rs/atomic-batcher"
-authors = ["ZhouHansen <z308114274@gmail.com>"]
+authors = ["ZhouHansen <z308114274@gmail.com>", "Efejjota <efejjota@gmail.com>"]
 license = "MIT OR Apache-2.0"
 readme = "README.md"
+edition = "2018"
 
 [dependencies]
-tokio = "0.1.11"
+futures = "0.3"
+
+[dev-dependencies]
+criterion = "0.3"
+
+[[bench]]
+name = "atomic-batcher"
+harness = false
