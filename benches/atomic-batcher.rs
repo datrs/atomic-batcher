@@ -7,7 +7,7 @@ pub fn criterion_benchmark(c: &mut Criterion) {
       let tell_length = |s: Vec<String>| async move { s.len() };
 
       let batcher = Batcher::new(tell_length);
-      batcher.append("world".to_string());
+      batcher.append(vec!["world".to_string()]);
     });
   });
 
@@ -17,7 +17,7 @@ pub fn criterion_benchmark(c: &mut Criterion) {
       let callback = |n| async move { n == 5 };
 
       let batcher = Batcher::new(tell_length);
-      batcher.appendcb("world".to_string(), callback);
+      batcher.appendcb(vec!["world".to_string()], callback);
     });
   });
 }

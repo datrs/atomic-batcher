@@ -6,9 +6,9 @@ use std::time::Instant;
 #[test]
 #[should_panic(expected = "Task called")]
 fn test_run_single_batch() {
-  let task = |_| async { panic!("Task called") };
+  let task = |_: Vec<()>| async { panic!("Task called") };
   let batch = Batcher::new(task);
-  batch.append(());
+  batch.append(vec![]);
 }
 
 #[test]
@@ -19,7 +19,7 @@ fn test_batches_are_generic() {
     }
   };
   let batch = Batcher::new(say_hello);
-  batch.append("world");
+  batch.append(vec!["world"]);
 
   let count_up_to = |vs| async move {
     for n in vs {
@@ -27,17 +27,17 @@ fn test_batches_are_generic() {
     }
   };
   let batch = Batcher::new(count_up_to);
-  batch.append(10);
+  batch.append(vec![10]);
 }
 
 #[test]
 #[should_panic(expected = "Callback called")]
 fn test_callback_is_called() {
-  let do_nothing = |_| async {};
+  let do_nothing = |_: Vec<()>| async {};
   let batch = Batcher::new(do_nothing);
   let callback = |_| async { panic!("Callback called") };
 
-  batch.appendcb((), callback);
+  batch.appendcb(vec![], callback);
 }
 
 #[test]
@@ -46,7 +46,7 @@ fn test_result_is_propagated() {
   let batch = Batcher::new(echo_input);
   let callback = |s| async move { assert_eq!(s, vec!["Some MSG"]) };
 
-  batch.appendcb("Some MSG", callback);
+  batch.appendcb(vec!["Some MSG"], callback);
 }
 
 async fn toggle_bool(vb: Vec<&mut bool>) -> String {
@@ -60,7 +60,7 @@ async fn toggle_bool(vb: Vec<&mut bool>) -> String {
 fn test_allow_some_mutability() {
   let mut toggle = false;
   let batch = Batcher::new(toggle_bool);
-  batch.append(&mut toggle);
+  batch.append(vec![&mut toggle]);
   assert_eq!(toggle, true);
 }
 
@@ -74,7 +74,7 @@ fn test_batches_block_thread() {
   };
 
   let batch = Batcher::new(sleep);
-  batch.append(100);
-  batch.append(100);
+  batch.append(vec![100]);
+  batch.append(vec![100]);
   assert!(test_start.elapsed() >= Duration::from_millis(200));
 }

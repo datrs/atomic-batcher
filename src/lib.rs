@@ -22,8 +22,8 @@
 //!   };
 //!
 //!   let batch = Batcher::new(say_name);
-//!   batch.appendcb("Ferris", say_hello);
-//!   batch.append("Rustacean");
+//!   batch.appendcb(vec!("Ferris"), say_hello);
+//!   batch.append(vec!("Rustacean"));
 //! }
 //! ```
 //! Outputs:
@@ -54,18 +54,22 @@ impl<INPUT, FUTURE: Future<Output = RESULT>, RESULT>
   }
 
   /// Schedules a new operation passing `value` as the only argument.
-  pub fn append(&self, value: INPUT) {
+  pub fn append(&self, value: Vec<INPUT>) {
     block_on(async {
-      (self.run)(vec![value]).await;
+      (self.run)(value).await;
     });
   }
 
   /// Schedules a new operation passing `value` as the only argument.
   ///
   /// Afterwards `callback` will be run passing the result of the operation as the only argument.
-  pub fn appendcb<CB: Future>(&self, value: INPUT, callback: fn(RESULT) -> CB) {
+  pub fn appendcb<CB: Future>(
+    &self,
+    value: Vec<INPUT>,
+    callback: fn(RESULT) -> CB,
+  ) {
     block_on(async {
-      let result = (self.run)(vec![value]).await;
+      let result = (self.run)(value).await;
       callback(result).await;
     });
   }
