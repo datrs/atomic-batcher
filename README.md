@@ -23,8 +23,9 @@ extern crate atomic_batcher;
 use atomic_batcher::*;
 
 fn main() {
-  let run = |val: Vec<u64>| async move {
-    println!("{:?}", val);  
+  let run = |val: Vec<Vec<u64>>| async move {
+    let flat: Vec<u64> = val.into_iter().flatten().collect();
+    println!("{:?}", flat);
   };
   
   // Create a batcher with a run function
