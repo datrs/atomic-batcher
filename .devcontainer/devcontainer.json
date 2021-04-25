@@ -1,0 +1,20 @@
+{
+	"name": "Rust Sandbox",
+	"dockerComposeFile": "docker-compose.yml",
+	"service": "app",
+	"workspaceFolder": "/workspace",
+
+	"remoteEnv": {
+		"LOCAL_WORKSPACE_FOLDER": "${localWorkspaceFolder}"
+	},
+	
+	"settings": { 
+		"terminal.integrated.shell.linux": "/bin/bash"
+	},
+
+	"extensions": [
+		"rust-lang.rust",
+		"serayuzgur.crates"
+//		"matklad.rust-analyzer"
+	],
+}
